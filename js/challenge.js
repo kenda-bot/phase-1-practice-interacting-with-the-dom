@@ -1,53 +1,52 @@
-const form = document.querySelector('form')
+const counter = document.getElementById("counter");
+const minus = document.getElementById("minus");
+const plus = document.getElementById("plus");
+const heart = document.getElementById("heart");
+const pause = document.getElementById("pause");
+const form = document.getElementById("comment-form");
+const comments = document.createElement("ul");
+document.getElementById("list").append(comments);
 
-form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const input = document.getElementById('comment-input')
-    const inputValue = input.value
-    console.log(inputValue)
-    const comments = document.getElementById('list')
-    const li = document.createElement('li')
-    li.innerText = inputValue
-    comments.appendChild(li)
+let i = 0;
+let active = false;
+let timer = createTimer();
 
-    form.reset()
-})
+function createTimer() {
+  active = true;
+  return setInterval(() => {
+    i += 1;
+    counter.innerText = i;
+  }, 1000);
+}
 
-const counter = document.getElementById('counter')
-let num  = 0
-let count
-document.addEventListener('DOMContentLoaded', () => {
-    count = setInterval(function(){
-        num+=1
-        counter.textContent = num
+pause.addEventListener("click", () => {
+  if (active) {
+    clearInterval(timer);
+    active = false;
+  } else if (!active) {
+    timer = createTimer();
+  }
+});
+minus.addEventListener("click", () => {
+  i -= 1;
+  counter.innerText = i;
+});
+plus.addEventListener("click", () => {
+  i += 1;
+  counter.innerText = i;
+});
 
-    }, 1000)
-})
-const increment = document.getElementById('plus')
-increment.addEventListener('click', () => {
-    counter.textContent =  num+= 1
-})
+heart.addEventListener("click", () => {
+  const lis = document.createElement("li");
+  lis.textContent = `${i} has one like`;
+  document.querySelector(".likes").append(lis);
+});
 
-const decrement = document.getElementById('minus')
-decrement.addEventListener('click', () => {
-    counter.textContent = num-=1
-})
-
-const submit = document.getElementById('submit')
-const pause = document.getElementById('pause')
-pause.addEventListener('click', () => {
-   clearInterval(count)
-   pause.innerText = "resume"
-    heart.disable= true
-       
-
-})
- 
-const heart = document.getElementById('heart')
-
-heart.addEventListener('click', () => {
-     const ul = document.getElementsByClassName('likes')
-     const li = document.createElement('li')
-     li.innerText = `${num} has been liked ${likes} time`
-     ul.appendChild(li)
-})
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const input = e.target.children[0];
+  const li = document.createElement("li");
+  li.textContent = input.value;
+  comments.append(li);
+  input.value = "";
+});
